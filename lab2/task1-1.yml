@@ -1,0 +1,10 @@
+---
+# task1
+
+- name: Task 1
+  hosts: my_servers
+  connection: local
+  tasks:
+    - name: File text creater
+      shell: 'echo OUR_FILE_CONTENT > {{ ansible_env.HOME }}/test.txt'
+      register: create_file_output

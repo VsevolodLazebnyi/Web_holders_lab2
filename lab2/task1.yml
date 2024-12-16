@@ -1,0 +1,24 @@
+---
+# task1
+
+- name: Task 1
+  hosts: my_servers
+  connection: local
+  tasks:
+    - name: File text creater
+      shell: 'echo OUR_FILE_CONTENT > {{ ansible_env.HOME }}/test.txt'
+      register: create_file_output
+
+    - name: File exist and content checker
+      command: "cat {{ ansible_env.HOME }}/test.txt"
+      register: file_content_check
+      failed_when: "'OUR_FILE_CONTENT' not in file_content_check.stdout"
+
+    - name: File content changer
+      shell: 'echo NEW_FILE_CONTENT > {{ ansible_env.HOME }}/test.txt'
+      when: file_content_check is succeeded
+
+    - name: File deleter
+      file:
+        path: "{{ ansible_env.HOME }}/test.txt"
+        state: absent
